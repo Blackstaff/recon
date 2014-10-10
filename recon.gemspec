@@ -4,7 +4,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'recon/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "Recon"
+  spec.name          = "recon"
   spec.version       = Recon::VERSION
   spec.authors       = ["Mateusz Czarnecki"]
   spec.email         = ["mateusz.czarnecki92@gmail.com"]
