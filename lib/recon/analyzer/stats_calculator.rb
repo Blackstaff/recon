@@ -1,0 +1,3 @@
+class StatsCalculator
+
+end
