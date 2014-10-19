@@ -1,4 +1,6 @@
 require_relative 'util/project_scanner'
 
-class Analyzer
+module Analyzer
+  class Analyzer
+  end
 end
