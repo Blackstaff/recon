@@ -1,7 +1,9 @@
 require 'spec_helper'
 
-describe Class do
-  it 'is not valid without a name' do
-    expect { Class.new }.to raise_error
+module Analizer
+  describe Class do
+    it 'is not valid without a name' do
+      expect { Analizer::Class.new }.to raise_error
+    end
   end
 end

@@ -10,7 +10,7 @@ module Analyzer
     end
 
     def add_dependency(class_name)
-      @dependencies << class_name
+      @dependencies << class_name.to_s
     end
 
     def add_method(method_name)
