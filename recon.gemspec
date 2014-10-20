@@ -20,6 +20,8 @@ Gem::Specification.new do |spec|
   spec.add_dependency "vrlib", ">= 1.0.16"
   spec.add_dependency "gtk2", ">= 2.2.0"
   spec.add_dependency "require_all", ">= 1.3.2"
+  spec.add_dependency "ruby_parser", ">= 3.6.3"
+  spec.add_dependency "sexp_processor", ">= 4.4.4"
 
   spec.add_development_dependency "bundler", "~> 1.5"
   spec.add_development_dependency "rake"
