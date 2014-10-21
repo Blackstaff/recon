@@ -8,7 +8,7 @@ module Analyzer
   class Analyzer < MethodBasedSexpProcessor
     def initialize
       super()
-      self.auto_shift_type = true
+      self.auto_shift_type = false
       @classes = []
       @methods = []
       @smells = []
