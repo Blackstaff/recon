@@ -184,11 +184,11 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <child>
-                      <object class="GtkVBox" id="vbox2">
+                      <object class="GtkVBox" id="main_menu_vbox">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <child>
-                          <object class="GtkButton" id="button1">
+                          <object class="GtkButton" id="general_stats_button">
                             <property name="label" translatable="yes">General Statistics</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
@@ -201,11 +201,11 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkVBox" id="vbox3">
+                          <object class="GtkVBox" id="classes_vbox">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <child>
-                              <object class="GtkLabel" id="label1">
+                              <object class="GtkLabel" id="classes_label">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="xalign">0.10999999940395355</property>
@@ -218,11 +218,11 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkVButtonBox" id="vbuttonbox1">
+                              <object class="GtkVButtonBox" id="classes_vbuttonbox">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <child>
-                                  <object class="GtkButton" id="button2">
+                                  <object class="GtkButton" id="class_stats_button">
                                     <property name="label" translatable="yes">Statistics</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
@@ -235,7 +235,7 @@
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkButton" id="button3">
+                                  <object class="GtkButton" id="class_diag_button">
                                     <property name="label" translatable="yes">Diagrams</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
@@ -248,8 +248,8 @@
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkButton" id="button4">
-                                    <property name="label" translatable="yes">button</property>
+                                  <object class="GtkButton" id="class_dep_button">
+                                    <property name="label" translatable="yes">Dependencies</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">True</property>
@@ -275,11 +275,11 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkVBox" id="vbox4">
+                          <object class="GtkVBox" id="methods_vbox">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <child>
-                              <object class="GtkLabel" id="label2">
+                              <object class="GtkLabel" id="methods_label">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="xalign">0.10999999940395355</property>
@@ -292,11 +292,11 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkVButtonBox" id="vbuttonbox2">
+                              <object class="GtkVButtonBox" id="methods_vbuttonbox">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <child>
-                                  <object class="GtkButton" id="button5">
+                                  <object class="GtkButton" id="method_stats_button">
                                     <property name="label" translatable="yes">Statistics</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
@@ -309,7 +309,7 @@
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkButton" id="button6">
+                                  <object class="GtkButton" id="method_diag_button">
                                     <property name="label" translatable="yes">Diagrams</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
@@ -319,19 +319,6 @@
                                     <property name="expand">False</property>
                                     <property name="fill">False</property>
                                     <property name="position">1</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <object class="GtkButton" id="button7">
-                                    <property name="label" translatable="yes">button</property>
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">True</property>
-                                    <property name="receives_default">True</property>
-                                  </object>
-                                  <packing>
-                                    <property name="expand">False</property>
-                                    <property name="fill">False</property>
-                                    <property name="position">2</property>
                                   </packing>
                                 </child>
                               </object>
@@ -348,6 +335,67 @@
                             <property name="position">2</property>
                           </packing>
                         </child>
+                        <child>
+                          <object class="GtkVBox" id="vbox5">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <child>
+                              <object class="GtkLabel" id="label3">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="xalign">0.10999999940395355</property>
+                                <property name="label" translatable="yes">Code Smells</property>
+                              </object>
+                              <packing>
+                                <property name="expand">True</property>
+                                <property name="fill">True</property>
+                                <property name="position">0</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkVButtonBox" id="vbuttonbox3">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <child>
+                                  <object class="GtkButton" id="if_smell_button">
+                                    <property name="label" translatable="yes">Nested ifs</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">True</property>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">False</property>
+                                    <property name="position">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkButton" id="method_smell_button">
+                                    <property name="label" translatable="yes">Big methods</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">True</property>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">False</property>
+                                    <property name="position">1</property>
+                                  </packing>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="expand">True</property>
+                                <property name="fill">True</property>
+                                <property name="position">1</property>
+                              </packing>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="expand">True</property>
+                            <property name="fill">True</property>
+                            <property name="position">3</property>
+                          </packing>
+                        </child>
                       </object>
                     </child>
                   </object>
@@ -361,6 +409,7 @@
             </child>
             <child>
               <object class="GtkScrolledWindow" id="scrolledwindow2">
+                <property name="width_request">400</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="hscrollbar_policy">automatic</property>
