@@ -19,6 +19,7 @@ module Analyzer
       parser = RubyParser.new
       paths = ProjectScanner.scan(dir)
       paths.each do |path|
+        @current_path = path
         ast = parser.process(File.binread(path), path)
         process ast
         @current_class = :none
@@ -31,19 +32,21 @@ module Analyzer
     # Process methods:
 
     def process_class(exp)
+      exp.shift
       class_name = exp.shift.to_s
       @classes << Class.new(class_name)
       @current_class = class_name
-      exp.shift
       exp.shift
       process_until_empty exp
       s()
     end
 
     def process_defn(exp)
-      method_name = exp.shift.to_s
-      @methods << Method.new(method_name, @current_class)
       exp.shift
+      method_name = exp.shift.to_s
+      lines = count_lines_in_method(method_name)
+      print "#{method_name} => #{lines} \n"
+      @methods << Method.new(method_name, @current_class, lines)
       exp.shift
       process_until_empty exp
       s()
@@ -51,6 +54,20 @@ module Analyzer
 
     def process_if(exp)
       s()
+    end
+
+    ########################################
+
+    def count_lines_in_method(method_name)
+      flag = false
+      lines = []
+      File.foreach(@current_path) do |line|
+        break if line =~ /def/ && flag
+        lines << line if flag
+        flag = true if line =~ /def #{method_name}/
+      end
+
+      lines.size
     end
 
   end
