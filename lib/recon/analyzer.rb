@@ -12,7 +12,7 @@ module Analyzer
       @classes = []
       @methods = []
       @smells = []
-      @current_class = :none
+      @current_class = Class.new(:none)
     end
 
     def analyze(dir)
@@ -22,7 +22,7 @@ module Analyzer
         @current_path = path
         ast = parser.process(File.binread(path), path)
         process ast
-        @current_class = :none
+        @current_class = Class.new(:none)
       end
 
       @classes.each {|klass| klass.lines = count_lines_in_class(klass)}
@@ -36,8 +36,8 @@ module Analyzer
     def process_class(exp)
       exp.shift
       class_name = exp.shift.to_s
-      @classes << Class.new(class_name)
-      @current_class = class_name
+      @current_class = Class.new(class_name)
+      @classes << @current_class
       exp.shift
       process_until_empty exp
       s()
@@ -47,7 +47,9 @@ module Analyzer
       exp.shift
       method_name = exp.shift.to_s
       lines = count_lines_in_method(method_name)
-      @methods << Method.new(method_name, @current_class, lines)
+      method = Method.new(method_name, @current_class.name, lines)
+      @methods << method
+      @current_class.add_method(method)
       exp.shift
       process_until_empty exp
       s()
@@ -72,7 +74,8 @@ module Analyzer
     end
 
     def count_lines_in_class(klass)
-      klass.methods.map {|method| method.lines}.inject(:+)
+      lines = klass.methods.map {|method| method.lines}.inject(:+)
+      lines.nil? ? 0 : lines
     end
 
   end
