@@ -3,10 +3,17 @@ module Analyzer
     attr_reader :name, :dependencies, :methods
     attr_accessor :lines
 
+    include Comparable
+
+    def <=>(other)
+      lines <=> other.lines
+    end
+
     def initialize(name)
       @name = name
       @dependencies = []
       @methods = []
+      @lines = 0
     end
 
     def add_dependency(class_name)
@@ -15,6 +22,10 @@ module Analyzer
 
     def add_method(method_name)
       @methods << method_name
+    end
+
+    def to_s
+      name.to_s
     end
 
   end

@@ -3,6 +3,12 @@ module Analyzer
     attr_reader :name, :class_name, :lines
     #attr_accessor :lines
 
+    include Comparable
+
+    def <=>(other)
+      lines <=> other.lines
+    end
+
     def initialize(name, class_name = :none, lines = 0)
       @name = name
       @class_name = class_name
