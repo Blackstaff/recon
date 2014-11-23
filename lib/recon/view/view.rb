@@ -100,19 +100,29 @@ class View
     # View builders
 
   def build_general_stats_view
+      lines = 0
+      @methods.each do |method|
+        lines += method.lines
+      end
+
       text_arr = ["Total number of classes: #{@classes.length} \n"]
-      text_arr << "Total number of methods: #{@methods.length}"
+      text_arr << "Total number of methods: #{@methods.length} \n"
+      text_arr << "Total number of lines of code: #{lines}"
       build_text_view(text_arr.join)
   end
 
   def build_class_stats_view
-      text_arr = []
-      build_text_view(text_arr.join)
+    largest_class = @classes.sort.pop
+    text_arr = ["Largest class: #{largest_class} \n"]
+    text_arr << "Number of lines: #{largest_class.lines}"
+    build_text_view(text_arr.join)
   end
 
   def build_method_stats_view
-      text_arr = []
-      build_text_view(text_arr.join)
+    largest_method = @methods.sort.pop
+    text_arr = ["Largest method: #{largest_method} \n"]
+    text_arr << "Number of lines: #{largest_method.lines}"
+    build_text_view(text_arr.join)
   end
 
   def build_if_smell_view
@@ -130,6 +140,7 @@ class View
       stats_view.editable = false
       stats_view.cursor_visible = false
       stats_view.buffer.text = text
+      stats_view.show
       stats_view
   end
 ##########################################
