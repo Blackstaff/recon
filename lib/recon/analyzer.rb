@@ -25,6 +25,8 @@ module Analyzer
         @current_class = :none
       end
 
+      @classes.each {|klass| klass.lines = count_lines_in_class(klass)}
+
       return @classes, @methods, @smells
     end
 
@@ -67,6 +69,10 @@ module Analyzer
       end
 
       lines.size
+    end
+
+    def count_lines_in_class(klass)
+      klass.methods.map {|method| method.lines}.inject(:+)
     end
 
   end
