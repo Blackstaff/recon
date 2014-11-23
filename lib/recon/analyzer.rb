@@ -45,7 +45,6 @@ module Analyzer
       exp.shift
       method_name = exp.shift.to_s
       lines = count_lines_in_method(method_name)
-      print "#{method_name} => #{lines} \n"
       @methods << Method.new(method_name, @current_class, lines)
       exp.shift
       process_until_empty exp
@@ -63,7 +62,7 @@ module Analyzer
       lines = []
       File.foreach(@current_path) do |line|
         break if line =~ /def/ && flag
-        lines << line if flag
+        lines << line if flag && line.strip != '' && line.strip[0] != '#'
         flag = true if line =~ /def #{method_name}/
       end
 
