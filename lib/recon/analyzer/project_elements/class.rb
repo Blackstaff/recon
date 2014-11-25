@@ -1,4 +1,5 @@
 module Analyzer
+  # Represents a class in the project
   class Class
     attr_reader :name, :methods
     attr_accessor :lines, :dependencies

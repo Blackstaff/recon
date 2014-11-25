@@ -1,7 +1,7 @@
 module Analyzer
+  # Represents a method in the project
   class Method
     attr_reader :name, :class_name, :lines
-    #attr_accessor :lines
 
     include Comparable
 

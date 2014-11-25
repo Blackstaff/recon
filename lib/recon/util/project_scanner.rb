@@ -1,6 +1,11 @@
 require 'find'
 
 class ProjectScanner
+  # Scans the given directory and all its subdirectories for ruby files
+  #
+  # @param proj_path [String] path to the project directory
+  # @return [Array<String>] paths to the ruby files
+  # @raise [InvalidPathException] if it can't open the directory
   def self.scan(proj_path)
     paths = []
     begin

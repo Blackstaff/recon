@@ -1,3 +1,5 @@
+# @author Mateusz Czarnecki <mateusz.czarnecki92@gmail.com>
+
 require 'ruby_parser'
 require 'sexp_processor'
 require_relative 'util/project_scanner'
@@ -15,6 +17,10 @@ module Analyzer
       @current_class = Class.new(:none)
     end
 
+    # Analyzes all the ruby files in the given directory and its subdirectories
+    # @param dir [String] path to the directory
+    # @return [Array(Array<Class>, Array<Method>, Array<CodeSmell>)] found classes,
+    #  methods and code smells
     def analyze(dir)
       parser = RubyParser.new
       paths = ProjectScanner.scan(dir)
@@ -68,6 +74,10 @@ module Analyzer
 
     ########################################
 
+    #Counts lines of code in a method
+    #
+    #@param method_name [String] the name of the method
+    #@return [Integer] lines of code count
     def count_lines_in_method(method_name)
       flag = false
       lines = []
@@ -80,14 +90,18 @@ module Analyzer
       lines.size
     end
 
+    #Counts lines of code in a class (sums LOC of methods)
+    #
+    #@param klass [Class] the class
+    #@return [Integer] lines of code count
     def count_lines_in_class(klass)
       lines = klass.methods.map {|method| method.lines}.inject(:+)
       lines.nil? ? 0 : lines
     end
 
+    #Deletes dependencies which are not classes within analyzed project
     def prune_dependencies
       class_names = @classes.map {|klass| klass.name}
-      print class_names
       @classes.each do |klass|
         klass.dependencies = klass.dependencies.uniq.keep_if {|dep| class_names.include?(dep)}
       end
