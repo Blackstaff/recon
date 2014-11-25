@@ -1,7 +1,7 @@
 module Analyzer
   class Class
-    attr_reader :name, :dependencies, :methods
-    attr_accessor :lines
+    attr_reader :name, :methods
+    attr_accessor :lines, :dependencies
 
     include Comparable
 

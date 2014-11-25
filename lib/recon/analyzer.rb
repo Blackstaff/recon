@@ -26,6 +26,7 @@ module Analyzer
       end
 
       @classes.each {|klass| klass.lines = count_lines_in_class(klass)}
+      prune_dependencies
 
       return @classes, @methods, @smells
     end
@@ -36,11 +37,10 @@ module Analyzer
     def process_class(exp)
       exp.shift
       class_name = exp.shift.to_s
-      @current_class = Class.new(class_name)
-      @classes << @current_class
-      exp.shift
-      process_until_empty exp
-      s()
+        @current_class = Class.new(class_name)
+        @classes << @current_class
+        process_until_empty exp
+        s()
     end
 
     def process_defn(exp)
@@ -55,7 +55,14 @@ module Analyzer
       s()
     end
 
-    def process_if(exp)
+    def process_const(exp)
+      exp.shift
+      name = exp.shift.to_s
+      is_class = !(Object.const_get(name) rescue nil).nil?
+      @current_class.add_dependency(name) if is_class
+
+      exp.shift
+      process_until_empty exp
       s()
     end
 
@@ -76,6 +83,14 @@ module Analyzer
     def count_lines_in_class(klass)
       lines = klass.methods.map {|method| method.lines}.inject(:+)
       lines.nil? ? 0 : lines
+    end
+
+    def prune_dependencies
+      class_names = @classes.map {|klass| klass.name}
+      print class_names
+      @classes.each do |klass|
+        klass.dependencies = klass.dependencies.uniq.keep_if {|dep| class_names.include?(dep)}
+      end
     end
 
   end
