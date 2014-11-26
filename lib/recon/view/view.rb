@@ -113,8 +113,18 @@ class View
 
   def build_class_stats_view
     largest_class = @classes.sort.pop
+
+    class_methodnum = Hash.new(0)
+    @classes.each do |klass|
+      class_methodnum.store(klass.name, klass.methods.size)
+    end
+    class_methodnum = class_methodnum.sort_by {|name, methods| methods}
+
     text_arr = ["Largest class: #{largest_class} \n"]
-    text_arr << "Number of lines: #{largest_class.lines}"
+    text_arr << "Number of lines: #{largest_class.lines} \n"
+    text_arr << "\n"
+    text_arr << "Class with largest number of methods: #{class_methodnum.last[0]} \n"
+    text_arr << "Number of methods: #{class_methodnum.last[1]} \n"
     build_text_view(text_arr.join)
   end
 
@@ -143,6 +153,7 @@ class View
       stats_view.show
       stats_view
   end
+
 ##########################################
 
   def show_file_chooser_dialog
