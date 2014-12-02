@@ -1,4 +1,5 @@
 require_relative '../analyzer.rb'
+require_relative '../visualizer.rb'
 
 class View
 
@@ -43,9 +44,10 @@ class View
     clean_data_view
 
     unless @class_diag_view
+      @class_diag_view = build_class_diag_view
     end
 
-    @builder['dataviewport'].add(Gtk::TextView.new)
+    @builder['dataviewport'].add(@class_diag_view)
   end
 
   def on_class_dep_button_clicked
@@ -152,6 +154,14 @@ class View
       stats_view.buffer.text = text
       stats_view.show
       stats_view
+  end
+
+  def build_class_diag_view
+    binary_chart = Visualizer.make_class_pie_chart(@classes)
+    loader = Gdk::PixbufLoader.new("png")
+    loader.last_write(binary_chart)
+    chart = loader.pixbuf
+    Gtk::Image.new(chart).show
   end
 
 ##########################################
