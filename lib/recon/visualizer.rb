@@ -5,8 +5,8 @@ class Visualizer
   def self.make_class_pie_chart(classes)
     chart = Gruff::Pie.new
     chart.title = "Lines of code"
-    sorted_classes = classes.sort
-    sorted_classes.last(4).each do |klass|
+    sorted_classes = classes.sort.reverse
+    sorted_classes.first(4).each do |klass|
       chart.data(klass.name, klass.lines)
       sorted_classes.delete(klass)
     end
