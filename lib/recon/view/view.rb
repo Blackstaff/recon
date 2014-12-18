@@ -54,9 +54,10 @@ class View
     clean_data_view
 
     unless @class_dep_view
+      @class_dep_view = build_class_dep_view
     end
 
-    @builder['dataviewport'].add(Gtk::TextView.new)
+    @builder['dataviewport'].add(@class_dep_view)
   end
 
   def on_method_stats_button_clicked
@@ -158,6 +159,14 @@ class View
 
   def build_class_diag_view
     binary_chart = Visualizer.make_class_pie_chart(@classes)
+    loader = Gdk::PixbufLoader.new("png")
+    loader.last_write(binary_chart)
+    chart = loader.pixbuf
+    Gtk::Image.new(chart).show
+  end
+#######
+  def build_class_dep_view
+    binary_chart = Visualizer.make_dependency_diagram(@classes)
     loader = Gdk::PixbufLoader.new("png")
     loader.last_write(binary_chart)
     chart = loader.pixbuf
