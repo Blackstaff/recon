@@ -8,6 +8,9 @@ require_relative 'analyzer/project_elements/method.rb'
 
 module Analyzer
   class Analyzer < MethodBasedSexpProcessor
+
+    MAX_METHOD_LENGTH = 10
+
     def initialize
       super()
       self.auto_shift_type = false
@@ -34,6 +37,8 @@ module Analyzer
       @classes.each {|klass| klass.lines = count_lines_in_class(klass)}
       prune_dependencies
 
+      @smells += find_big_methods(MAX_METHOD_LENGTH)
+
       return @classes, @methods, @smells
     end
 
@@ -43,10 +48,10 @@ module Analyzer
     def process_class(exp)
       exp.shift
       class_name = exp.shift.to_s
-        @current_class = Class.new(class_name)
-        @classes << @current_class
-        process_until_empty exp
-        s()
+      @current_class = Class.new(class_name)
+      @classes << @current_class
+      process_until_empty exp
+      s()
     end
 
     def process_defn(exp)
@@ -105,6 +110,16 @@ module Analyzer
       @classes.each do |klass|
         klass.dependencies = klass.dependencies.uniq.keep_if {|dep| class_names.include?(dep)}
       end
+    end
+
+    def find_big_methods(treshold)
+      big_methods = []
+      @methods.each do |method|
+        if method.lines > treshold
+          big_methods << CodeSmell.new(:too_big_method, method.class_name, method.name)
+        end
+      end
+      big_methods
     end
 
   end

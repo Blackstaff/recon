@@ -145,6 +145,7 @@ class View
 
   def build_method_smell_view
       text_arr = []
+      @smells.each {|s| text_arr << s.to_s + "\n" if s.type == :too_big_method}
       build_text_view(text_arr.join)
   end
 
