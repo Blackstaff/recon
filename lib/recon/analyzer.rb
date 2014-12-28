@@ -39,6 +39,8 @@ module Analyzer
 
       @smells += find_big_methods(MAX_METHOD_LENGTH)
 
+      print @methods.map {|m| "#{m.name} => #{m.complexity} \n" if m.complexity > 6}.join
+
       return @classes, @methods, @smells
     end
 
@@ -59,12 +61,12 @@ module Analyzer
       exp.shift
       method_name = exp.shift.to_s
       lines = count_lines_in_method(method_name)
-      method = Method.new(method_name, @current_class.name, lines)
+      @current_method = Method.new(method_name, @current_class.name, lines)
       exp.shift
       process_until_empty exp
 
-      @methods << method
-      @current_class.add_method(method)
+      @methods << @current_method
+      @current_class.add_method(@current_method)
       s()
     end
 
@@ -78,6 +80,21 @@ module Analyzer
 
       s()
     end
+
+    def process_if(exp)
+      exp.shift
+      process_until_empty exp
+
+      @current_method.incr_complexity unless @current_method.nil?
+      s()
+    end
+    alias process_for process_if
+    alias process_when process_if
+    alias process_until process_if
+    alias process_while process_if
+    alias process_rescue process_if
+    alias process_and process_if
+    alias process_or process_if
 
     ########################################
 
