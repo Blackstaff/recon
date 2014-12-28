@@ -49,8 +49,9 @@ module Analyzer
       exp.shift
       class_name = exp.shift.to_s
       @current_class = Class.new(class_name)
-      @classes << @current_class
       process_until_empty exp
+
+      @classes << @current_class
       s()
     end
 
@@ -59,10 +60,11 @@ module Analyzer
       method_name = exp.shift.to_s
       lines = count_lines_in_method(method_name)
       method = Method.new(method_name, @current_class.name, lines)
-      @methods << method
-      @current_class.add_method(method)
       exp.shift
       process_until_empty exp
+
+      @methods << method
+      @current_class.add_method(method)
       s()
     end
 
@@ -71,9 +73,9 @@ module Analyzer
       name = exp.shift.to_s
       is_class = !(Object.const_get(name) rescue nil).nil?
       @current_class.add_dependency(name) if is_class
-
       exp.shift
       process_until_empty exp
+
       s()
     end
 
