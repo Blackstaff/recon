@@ -39,8 +39,6 @@ module Analyzer
 
       @smells += find_big_methods(MAX_METHOD_LENGTH)
 
-      print @methods.map {|m| "#{m.name} => #{m.complexity} \n" if m.complexity > 6}.join
-
       return @classes, @methods, @smells
     end
 
@@ -54,6 +52,7 @@ module Analyzer
       process_until_empty exp
 
       @classes << @current_class
+      @current_class = Class.new(:none)
       s()
     end
 
@@ -67,6 +66,7 @@ module Analyzer
 
       @methods << @current_method
       @current_class.add_method(@current_method)
+      @current_method = nil
       s()
     end
 
