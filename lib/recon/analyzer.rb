@@ -10,6 +10,7 @@ module Analyzer
   class Analyzer < MethodBasedSexpProcessor
 
     MAX_METHOD_LENGTH = 10
+    MAX_COMPLEXITY = 6
 
     def initialize
       super()
@@ -37,7 +38,10 @@ module Analyzer
       @classes.each {|klass| klass.lines = count_lines_in_class(klass)}
       prune_dependencies
 
-      @smells += find_big_methods(MAX_METHOD_LENGTH)
+      # The :none Class was only needed during processing
+      @classes.delete(Class.new(:none))
+
+      @smells = find_code_smells
 
       return @classes, @methods, @smells
     end
@@ -131,14 +135,17 @@ module Analyzer
       end
     end
 
-    def find_big_methods(treshold)
-      big_methods = []
+    def find_code_smells
+      code_smells = []
       @methods.each do |method|
-        if method.lines > treshold
-          big_methods << CodeSmell.new(:too_big_method, method.class_name, method.name)
+        if method.lines > MAX_METHOD_LENGTH
+          code_smells << CodeSmell.new(:too_big_method, method.class_name, method.name)
+        end
+        if method.complexity > MAX_COMPLEXITY
+          code_smells << CodeSmell.new(:too_complex_method, method.class_name, method.name)
         end
       end
-      big_methods
+      code_smells
     end
 
   end

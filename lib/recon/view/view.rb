@@ -140,6 +140,7 @@ class View
 
   def build_if_smell_view
       text_arr = []
+      @smells.each {|s| text_arr << s.to_s + "\n" if s.type == :too_complex_method}
       build_text_view(text_arr.join)
   end
 
