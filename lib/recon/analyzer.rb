@@ -51,11 +51,13 @@ module Analyzer
 
     def process_class(exp)
       exp.shift
-      class_name = exp.shift.to_s
-      @current_class = Class.new(class_name)
-      process_until_empty exp
+      #class_name = exp.shift.to_s
+      in_klass(exp.shift) do
+        @current_class = Class.new(klass_name)
+        @classes << @current_class
+        process_until_empty exp
+      end
 
-      @classes << @current_class
       @current_class = Class.new(:none)
       s()
     end
