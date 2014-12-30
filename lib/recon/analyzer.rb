@@ -107,6 +107,7 @@ module Analyzer
     #@param method_name [String] the name of the method
     #@return [Integer] lines of code count
     def count_lines_in_method(method_name)
+      method_name = method_name.gsub(/[\.\|\(\)\[\]\{\}\+\\\^\$\*\?]/) {|match| '\\' + match}
       flag = false
       lines = []
       File.foreach(@current_path) do |line|
