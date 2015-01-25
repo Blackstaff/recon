@@ -5,6 +5,7 @@ require 'sexp_processor'
 require_relative 'util/project_scanner'
 require_relative 'analyzer/project_elements/class.rb'
 require_relative 'analyzer/project_elements/method.rb'
+require 'pp' #DELETE
 
 module Analyzer
   class Analyzer < MethodBasedSexpProcessor
@@ -38,10 +39,12 @@ module Analyzer
       @classes.each {|klass| klass.lines = count_lines_in_class(klass)}
       prune_dependencies
 
-      # The :none Class was only needed during processing
-      @classes.delete(Class.new(:none))
+      # Deletes empty classes
+      # @classes.delete(Class.new(:none))
 
       @smells = find_code_smells
+
+      #pp @classes.map {|c| "#{c.name} => #{c.dependencies}"}
 
       return @classes, @methods, @smells
     end
@@ -51,7 +54,6 @@ module Analyzer
 
     def process_class(exp)
       exp.shift
-      #class_name = exp.shift.to_s
       in_klass(exp.shift) do
         @current_class = Class.new(klass_name)
         @classes << @current_class
@@ -76,11 +78,23 @@ module Analyzer
       s()
     end
 
+    def process_colon2(exp)
+      exp.shift
+      name = exp.flatten
+      name.delete :colon2
+      name.delete :const
+      name = name.join("::")
+      @current_class.add_dependency(name)
+      exp.shift
+      process_until_empty exp
+
+      s()
+    end
+
     def process_const(exp)
       exp.shift
       name = exp.shift.to_s
-      is_class = !(Object.const_get(name) rescue nil).nil?
-      @current_class.add_dependency(name) if is_class
+      @current_class.add_dependency(name)
       exp.shift
       process_until_empty exp
 
@@ -131,9 +145,15 @@ module Analyzer
     end
 
     #Deletes dependencies which are not classes within analyzed project
-    def prune_dependencies
+    def prune_dependencies #TODO correct
       class_names = @classes.map {|klass| klass.name}
       @classes.each do |klass|
+        klass.dependencies =  klass.dependencies.map do |dep|
+          dep_split = dep.split('::')
+          klass_split = klass.name.split('::')
+          klass_split.pop(dep_split.size)
+          (klass_split + dep_split).join('::')
+        end
         klass.dependencies = klass.dependencies.uniq.keep_if {|dep| class_names.include?(dep)}
       end
     end
