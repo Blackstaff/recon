@@ -26,6 +26,10 @@ module Analyzer
       @methods << method_name
     end
 
+    def methods_number
+      methods.size
+    end
+
     def to_s
       name.to_s
     end
