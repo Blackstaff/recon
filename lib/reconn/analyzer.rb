@@ -45,7 +45,7 @@ module Analyzer
       prune_dependencies
 
       # Deletes empty classes
-      @classes.delete(Class.new(:none))
+      #@classes.delete(Class.new(:none))
 
       @smells = find_code_smells
 
@@ -68,10 +68,10 @@ module Analyzer
     end
 
     def process_defn(exp)
-      exp.shift
+      is_singleton = exp.shift.to_s == "defn" ? false : true
       method_name = exp.shift.to_s
       lines = count_lines_in_method(method_name)
-      @current_method = Method.new(method_name, @current_class.name, lines)
+      @current_method = Method.new(method_name, @current_class.name, lines, is_singleton)
       exp.shift
       process_until_empty exp
 
