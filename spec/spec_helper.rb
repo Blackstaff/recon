@@ -1,4 +1,4 @@
 require 'bundler/setup'
 Bundler.setup
 
-require 'recon'
+require 'reconn'

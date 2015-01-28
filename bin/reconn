@@ -8,6 +8,6 @@ STDERR.sync = true
 
 #everything in these directories will be included
 my_path = File.expand_path(File.dirname(__FILE__))
-require_all Dir.glob(my_path + "/../lib/recon/**/*.rb")
+require_all Dir.glob(my_path + "/../lib/reconn/**/*.rb")
 
 View.new.show

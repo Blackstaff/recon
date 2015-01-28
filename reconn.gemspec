@@ -1,11 +1,11 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'recon/version'
+require 'reconn/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "recon"
-  spec.version       = Recon::VERSION
+  spec.name          = "reconn"
+  spec.version       = Reconn::VERSION
   spec.authors       = ["Mateusz Czarnecki"]
   spec.email         = ["mateusz.czarnecki92@gmail.com"]
   spec.summary       = %q{A tool for analysis and visualization of projects written in Ruby}
