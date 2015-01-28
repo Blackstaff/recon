@@ -74,8 +74,13 @@ module Analyzer
 
       @methods << @current_method
       @current_class.add_method(@current_method)
-      @current_method = nil
+      @current_method = Method.new(:none)
       s()
+    end
+
+    def process_defs(exp)
+      exp.shift
+      process_defn(exp)
     end
 
     def process_colon2(exp)
@@ -129,7 +134,7 @@ module Analyzer
       File.foreach(@current_path) do |line|
         break if line =~ /def/ && flag
         lines << line if flag && line.strip != '' && line.strip[0] != '#'
-        flag = true if line =~ /def #{method_name}/
+        flag = true if line =~ /def #{method_name}/ || line =~ /def self.#{method_name}/
       end
 
       lines.size
