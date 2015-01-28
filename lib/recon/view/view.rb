@@ -104,18 +104,15 @@ class View
     # View builders
 
   def build_general_stats_view
-      lines = 0
-      @methods.each do |method|
-        lines += method.lines
-      end
+    lines = 0
+    @methods.each do |method|
+      lines += method.lines
+    end
 
-      text_arr = ["Total number of classes: #{@classes.length} \n"]
-      text_arr << "Total number of methods: #{@methods.length} \n"
-      text_arr << "Total number of lines of code: #{lines}"
-      build_text_view(text_arr.join)
-  end
+    text_arr = ["Total number of classes: #{@classes.length} \n"]
+    text_arr << "Total number of methods: #{@methods.length} \n"
+    text_arr << "Total number of lines of code: #{lines} \n"
 
-  def build_class_stats_view
     largest_class = @classes.sort.pop
 
     class_methodnum = Hash.new(0)
@@ -124,40 +121,70 @@ class View
     end
     class_methodnum = class_methodnum.sort_by {|name, methods| methods}
 
-    text_arr = ["Largest class: #{largest_class} \n"]
+    text_arr << "\n"
+    text_arr << "Largest class: #{largest_class} \n"
     text_arr << "Number of lines: #{largest_class.lines} \n"
     text_arr << "\n"
     text_arr << "Class with largest number of methods: #{class_methodnum.last[0]} \n"
     text_arr << "Number of methods: #{class_methodnum.last[1]} \n"
+
+    largest_method = @methods.sort.pop
+    text_arr << "\n"
+    text_arr << "Largest method: #{largest_method} \n"
+    text_arr << "Number of lines: #{largest_method.lines} \n"
+
     build_text_view(text_arr.join)
+  end
+
+  def build_class_stats_view
+    features = [ {name: "Number of lines", data: prepare_data(@classes, :lines)} ]
+    features << {name: "Cyclomatic complexity", data: prepare_data(@classes, :complexity)}
+    features << {name: "Number of methods", data: prepare_data(@classes, :methods_number)}
+    text = prepare_text(features)
+    build_text_view(text)
   end
 
   def build_method_stats_view
-    largest_method = @methods.sort.pop
-    text_arr = ["Largest method: #{largest_method} \n"]
-    text_arr << "Number of lines: #{largest_method.lines}"
-    build_text_view(text_arr.join)
+    features = [ {name: "Number of lines", data: prepare_data(@methods, :lines)} ]
+    features << {name: "Cyclomatic complexity", data: prepare_data(@methods, :complexity)}
+    text = prepare_text(features)
+    build_text_view(text)
   end
 
   def build_if_smell_view
-      text_arr = []
-      @smells.each {|s| text_arr << s.to_s + "\n" if s.type == :too_complex_method}
-      build_text_view(text_arr.join)
+    text_arr = []
+    @smells.each {|s| text_arr << s.to_s + "\n" if s.type == :too_complex_method}
+    build_text_view(text_arr.join)
   end
 
   def build_method_smell_view
-      text_arr = []
-      @smells.each {|s| text_arr << s.to_s + "\n" if s.type == :too_big_method}
-      build_text_view(text_arr.join)
+    text_arr = []
+    @smells.each {|s| text_arr << s.to_s + "\n" if s.type == :too_big_method}
+    build_text_view(text_arr.join)
   end
 
   def build_text_view(text)
-      stats_view = Gtk::TextView.new
-      stats_view.editable = false
-      stats_view.cursor_visible = false
-      stats_view.buffer.text = text
-      stats_view.show
-      stats_view
+    stats_view = Gtk::TextView.new
+    stats_view.editable = false
+    stats_view.cursor_visible = false
+    stats_view.buffer.text = text
+    stats_view.show
+    stats_view
+  end
+
+  def prepare_text(features)
+    text_arr = []
+    features.each do |feature|
+      text_arr << "#{feature[:name]}: \n"
+      data = feature[:data]
+      data.each_index do |i|
+        break if i == 30
+        item = data[i]
+        text_arr << "#{i+1}. #{item[:label]} => #{item[:value]} \n"
+      end
+      text_arr << "\n"
+    end
+    text_arr.join
   end
 
   def build_class_diag_view
