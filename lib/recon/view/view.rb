@@ -74,9 +74,10 @@ class View
     clean_data_view
 
     unless @method_diag_view
+      @method_diag_view = build_method_diag_view
     end
 
-    @builder['dataviewport'].add(Gtk::TextView.new)
+    @builder['dataviewport'].add(@method_diag_view)
   end
 
   def on_if_smell_button_clicked
@@ -160,7 +161,51 @@ class View
   end
 
   def build_class_diag_view
-    binary_chart = Visualizer.make_class_pie_chart(@classes)
+    diagrams = [ {title: "Lines of code", parameter: :lines} ]
+    diagrams << {title: "Cyclomatic complexity", parameter: :complexity}
+    diagrams << {title: "Number of methods", parameter: "methods_number"}
+    build_diag_view(@classes, diagrams)
+  end
+
+  def build_method_diag_view
+    diagrams = [ {title: "Lines of code", parameter: :lines} ]
+    diagrams << {title: "Cyclomatic complexity", parameter: :complexity}
+    build_diag_view(@methods, diagrams)
+  end
+
+  def build_diag_view(raw_data, diagrams)
+    tabbed_panel = Gtk::Notebook.new
+
+    diagrams.each do |diag|
+      data = prepare_data(raw_data, diag[:parameter])
+
+      title = diag[:title]
+
+      pie_chart = build_pie_chart(title, data)
+      bar_chart = build_bar_chart(title, data.first(10))
+
+      container = Gtk::VBox.new(false, 4)
+      container = container.pack_end(pie_chart)
+      container = container.pack_end(bar_chart)
+      container.show
+
+      tabbed_panel.append_page(container, Gtk::Label.new(title))
+    end
+
+    tabbed_panel.show
+  end
+
+  def build_pie_chart(title, data)
+    binary_chart = Visualizer.make_pie_chart(title, data, 4)
+    chart_to_image(binary_chart)
+  end
+
+  def build_bar_chart(title, data)
+    binary_chart = Visualizer.make_bar_chart(title, data)
+    chart_to_image(binary_chart)
+  end
+
+  def chart_to_image(binary_chart)
     loader = Gdk::PixbufLoader.new("png")
     loader.last_write(binary_chart)
     chart = loader.pixbuf
@@ -192,6 +237,11 @@ class View
     @builder['dataviewport'].each do |child|
       @builder['dataviewport'].remove(child)
     end
+  end
+
+  def prepare_data(raw_data, parameter)
+    data = raw_data.sort_by {|d| d.send(parameter.to_s)}.reverse
+    data.map! {|d| {label: d.to_s, value: d.send(parameter.to_s)}}
   end
 
   private :build_general_stats_view, :build_class_stats_view,

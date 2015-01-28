@@ -2,21 +2,30 @@ require 'gruff'
 require 'ruby-graphviz'
 
 class Visualizer
-  def self.make_class_pie_chart(classes)
+  def self.make_pie_chart(title, data, items_number)
     chart = Gruff::Pie.new
-    chart.title = "Lines of code"
-    sorted_classes = classes.sort.reverse
-    sorted_classes.first(4).each do |klass|
-      chart.data(klass.name, klass.lines)
-      sorted_classes.delete(klass)
+    chart.title = title.to_s
+    data = Array.new(data)
+    data.first(items_number).each do |item|
+      chart.data(item[:label], item[:value])
+      data.delete(item)
     end
 
-    chart.data("other", sorted_classes.map {|k| k.lines}.inject(:+))
+    chart.data("other", data.map {|itm| itm[:value]}.inject(:+))
 
     chart.to_blob
   end
 
-  def self.make_method_pie_chart
+  def self.make_bar_chart(title, data)
+    chart = Gruff::Bar.new
+    chart.minimum_value = 0
+    chart.maximum_value = data.first[:value]
+    chart.title = title.to_s
+    data.each do |item|
+      chart.data(item[:label], item[:value])
+    end
+
+    chart.to_blob
   end
 
   def self.make_dependency_diagram(classes)
