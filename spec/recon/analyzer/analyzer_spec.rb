@@ -21,5 +21,13 @@ describe Analyzer do
       expect( @methods.map {|x| x.name } ).to include('analyze')
     end
 
+    it 'calculates lines of code in classes' do
+    end
+
+    it 'calculates lines of code in methods' do
+    end
+
+    it 'finds dependencies between classes' do
+    end
   end
 end

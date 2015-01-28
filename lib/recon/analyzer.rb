@@ -5,7 +5,6 @@ require 'sexp_processor'
 require_relative 'util/project_scanner'
 require_relative 'analyzer/project_elements/class.rb'
 require_relative 'analyzer/project_elements/method.rb'
-require 'pp' #DELETE
 
 module Analyzer
   class Analyzer < MethodBasedSexpProcessor
@@ -43,11 +42,9 @@ module Analyzer
       prune_dependencies
 
       # Deletes empty classes
-      # @classes.delete(Class.new(:none))
+      @classes.delete(Class.new(:none))
 
       @smells = find_code_smells
-
-      #pp @classes.map {|c| "#{c.name} => #{c.dependencies}"}
 
       return @classes, @methods, @smells
     end
@@ -158,7 +155,7 @@ module Analyzer
     end
 
     #Deletes dependencies which are not classes within analyzed project
-    def prune_dependencies #TODO correct
+    def prune_dependencies
       class_names = @classes.map {|klass| klass.name}
       @classes.each do |klass|
         klass.dependencies =  klass.dependencies.map do |dep|
