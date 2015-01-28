@@ -30,6 +30,16 @@ module Analyzer
       methods.size
     end
 
+    def +(other)
+      other.methods.each do |method|
+        if !@methods.index(method)
+          @methods << method
+        end
+      end
+      @dependencies += other.dependencies
+      self
+    end
+
     def to_s
       name.to_s
     end
