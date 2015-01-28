@@ -113,7 +113,7 @@ class View
     text_arr << "Total number of methods: #{@methods.length} \n"
     text_arr << "Total number of lines of code: #{lines} \n"
 
-    largest_class = @classes.sort.pop
+    largest_class = @classes.sort_by {|c| c.lines}.pop
 
     class_methodnum = Hash.new(0)
     @classes.each do |klass|

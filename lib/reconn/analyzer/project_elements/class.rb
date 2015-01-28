@@ -6,8 +6,8 @@ module Analyzer
 
     include Comparable
 
-    def <=>(other)
-      lines <=> other.lines
+    def ==(other)
+      name == other.name
     end
 
     def initialize(name)
