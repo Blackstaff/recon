@@ -36,7 +36,10 @@ module Analyzer
         @current_class = Class.new(:none)
       end
 
-      @classes.each {|klass| klass.lines = count_lines_in_class(klass)}
+      @classes.each do |klass|
+        klass.lines = count_lines_in_class(klass)
+        klass.complexity = count_complexity_in_class(klass)
+      end
       prune_dependencies
 
       # Deletes empty classes
@@ -147,6 +150,11 @@ module Analyzer
     def count_lines_in_class(klass)
       lines = klass.methods.map {|method| method.lines}.inject(:+)
       lines.nil? ? 0 : lines
+    end
+
+    def count_complexity_in_class(klass)
+      complexity = klass.methods.map {|method| method.complexity}.inject(:+)
+      complexity.nil? ? 0 : complexity
     end
 
     #Deletes dependencies which are not classes within analyzed project
