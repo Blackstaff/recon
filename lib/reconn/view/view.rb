@@ -128,7 +128,7 @@ class View
     text_arr << "Class with largest number of methods: #{class_methodnum.last[0]} \n"
     text_arr << "Number of methods: #{class_methodnum.last[1]} \n"
 
-    largest_method = @methods.sort.pop
+    largest_method = @methods.sort_by {|m| m.lines}.pop
     text_arr << "\n"
     text_arr << "Largest method: #{largest_method} \n"
     text_arr << "Number of lines: #{largest_method.lines} \n"

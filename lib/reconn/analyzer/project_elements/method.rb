@@ -5,8 +5,8 @@ module Analyzer
 
     include Comparable
 
-    def <=>(other)
-      lines <=> other.lines
+    def ==(other)
+      name == other.name && class_name == other.class_name
     end
 
     def initialize(name, class_name = :none, lines = 0)
