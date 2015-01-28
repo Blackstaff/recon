@@ -35,6 +35,9 @@ module Analyzer
         @current_class = Class.new(:none)
       end
 
+      merged_classes = merge_duplicate_classes
+      @classes = merged_classes unless merged_classes.nil?
+
       @classes.each do |klass|
         klass.lines = count_lines_in_class(klass)
         klass.complexity = count_complexity_in_class(klass)
@@ -164,7 +167,20 @@ module Analyzer
           klass_split.pop(dep_split.size)
           (klass_split + dep_split).join('::')
         end
-        klass.dependencies = klass.dependencies.uniq.keep_if {|dep| class_names.include?(dep)}
+        klass.dependencies = klass.dependencies.uniq.keep_if {|dep| dep != klass.name && class_names.include?(dep)}
+      end
+    end
+
+    def merge_duplicate_classes
+      duplicates = @classes.group_by {|c| c.name}.select {|k, v| v.size > 1}.values
+      if !duplicates.empty?
+        merged_dups = []
+        duplicates.each do |dup|
+          merged_dups << dup.inject(:+)
+        end
+        @classes.uniq {|c| c.name}.each do |klass|
+          klass = merged_dups.find {|d| d == klass} if merged_dups.include?(klass)
+        end
       end
     end
 
