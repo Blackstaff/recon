@@ -4,8 +4,8 @@
   <!-- interface-naming-policy project-wide -->
   <object class="GtkWindow" id="window1">
     <property name="can_focus">False</property>
-    <property name="default_width">600</property>
-    <property name="default_height">400</property>
+    <property name="default_width">1011</property>
+    <property name="default_height">688</property>
     <signal name="destroy" handler="destroy_window" swapped="no"/>
     <child>
       <object class="GtkVBox" id="vbox1">
@@ -175,6 +175,7 @@
             <property name="spacing">3</property>
             <child>
               <object class="GtkScrolledWindow" id="scrolledwindow1">
+                <property name="width_request">150</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="hscrollbar_policy">automatic</property>
@@ -410,7 +411,7 @@
                 </child>
               </object>
               <packing>
-                <property name="expand">True</property>
+                <property name="expand">False</property>
                 <property name="fill">True</property>
                 <property name="position">0</property>
               </packing>
