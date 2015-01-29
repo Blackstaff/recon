@@ -3,7 +3,7 @@ module Analyzer
   # Represents a class in the project
   class Class
     attr_reader :name, :methods, :filepaths
-    attr_accessor :lines, :complexity, :dependencies
+    attr_accessor :lines, :complexity, :dependencies, :external_deps
 
     include Comparable
 

@@ -33,11 +33,18 @@ module Reconn
     def self.make_dependency_diagram(classes)
       diagram = GraphViz.new(:G, :type => :digraph)
       nodes = classes.map { |c| diagram.add_nodes(c.name) }
+      external_nodes = classes.map {|c| c.external_deps}.inject(:+).uniq.map {|n| diagram.add_nodes(n)}
       classes.each do |klass|
         classes.each do |other_klass|
           if !klass.dependencies.index {|d| d == other_klass.name }.nil? || klass.dependencies.find_all {|d| other_klass.name =~ /^.*{0,}::#{d}$/}.size == 1
             node, other_node = [klass, other_klass].map {|k| nodes.find {|n| n[:label].to_s.gsub('"', '') == k.name}}
             diagram.add_edges(node, other_node)
+          end
+        end
+        external_nodes.each do |ext_node|
+          if klass.external_deps.include?(ext_node[:label].to_s.gsub('"', ''))
+            node = nodes.find {|n| n[:label].to_s.gsub('"', '') == klass.name}
+            diagram.add_edges(node, ext_node)
           end
         end
       end

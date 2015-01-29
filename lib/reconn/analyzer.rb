@@ -41,6 +41,7 @@ module Analyzer
         klass.complexity = count_complexity_in_class(klass)
       end
       prune_dependencies
+      find_external_dependencies(paths)
 
       # Deletes empty classes
       #@classes.delete(Class.new(:none))
@@ -186,6 +187,24 @@ module Analyzer
         @classes.uniq {|c| c.name}.each do |klass|
           klass = merged_dups.find {|d| d == klass} if merged_dups.include?(klass)
         end
+      end
+    end
+
+    def find_external_dependencies(paths)
+      @classes.each do |klass|
+        external_deps = []
+        klass.filepaths.each do |path|
+          File.foreach(path) do |line|
+            line.strip!
+            if line =~ /^require .*$/
+              dep = line.split(" ")[1].gsub(/([\"\'])/, "")
+              external_deps << dep if !paths.find {|p| p.to_s =~ /.*#{dep}.*/}
+            else
+              next
+            end
+          end
+        end
+        klass.external_deps = external_deps
       end
     end
 
