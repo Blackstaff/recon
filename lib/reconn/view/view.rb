@@ -195,8 +195,8 @@ class View
   end
 
   def build_method_diag_view
-    diagrams = [ {title: "Lines of code", parameter: :lines} ]
-    diagrams << {title: "Cyclomatic complexity", parameter: :complexity}
+    diagrams = [ {title: "Lines of code", parameter: :lines, treshold: Analyzer::Analyzer::MAX_METHOD_LENGTH} ]
+    diagrams << {title: "Cyclomatic complexity", parameter: :complexity, treshold: Analyzer::Analyzer::MAX_COMPLEXITY}
     build_diag_view(@methods, diagrams)
   end
 
@@ -209,7 +209,7 @@ class View
       title = diag[:title]
 
       pie_chart = build_pie_chart(title, data)
-      bar_chart = build_bar_chart(title, data.first(10))
+      bar_chart = build_bar_chart(title, data.first(10), diag[:treshold])
 
       container = Gtk::VBox.new(false, 4)
       container = container.pack_end(pie_chart)
@@ -227,8 +227,8 @@ class View
     chart_to_image(binary_chart)
   end
 
-  def build_bar_chart(title, data)
-    binary_chart = Visualizer.make_bar_chart(title, data)
+  def build_bar_chart(title, data, treshold)
+    binary_chart = Visualizer.make_bar_chart(title, data, treshold)
     chart_to_image(binary_chart)
   end
 
