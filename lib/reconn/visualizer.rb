@@ -41,6 +41,7 @@ module Reconn
             diagram.add_edges(node, other_node)
           end
         end
+        external_nodes.each {|n| n.set {|_n| _n.color = "blue"}}
         external_nodes.each do |ext_node|
           if klass.external_deps.include?(ext_node[:label].to_s.gsub('"', ''))
             node = nodes.find {|n| n[:label].to_s.gsub('"', '') == klass.name}
