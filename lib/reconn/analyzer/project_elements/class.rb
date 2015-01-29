@@ -1,7 +1,8 @@
+module Reconn
 module Analyzer
   # Represents a class in the project
   class Class
-    attr_reader :name, :methods
+    attr_reader :name, :methods, :filepaths
     attr_accessor :lines, :complexity, :dependencies
 
     include Comparable
@@ -10,8 +11,9 @@ module Analyzer
       name == other.name
     end
 
-    def initialize(name)
+    def initialize(name, filepaths = [])
       @name = name
+      @filepaths = filepaths
       @dependencies = []
       @methods = []
       @lines = 0
@@ -37,6 +39,7 @@ module Analyzer
         end
       end
       @dependencies += other.dependencies
+      @filepaths += other.filepaths
       self
     end
 
@@ -45,4 +48,5 @@ module Analyzer
     end
 
   end
+end
 end

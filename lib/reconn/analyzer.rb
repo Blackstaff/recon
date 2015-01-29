@@ -2,10 +2,8 @@
 
 require 'ruby_parser'
 require 'sexp_processor'
-require_relative 'util/project_scanner'
-require_relative 'analyzer/project_elements/class.rb'
-require_relative 'analyzer/project_elements/method.rb'
 
+module Reconn
 module Analyzer
   class Analyzer < MethodBasedSexpProcessor
 
@@ -58,7 +56,7 @@ module Analyzer
     def process_class(exp)
       exp.shift
       in_klass(exp.shift) do
-        @current_class = Class.new(klass_name)
+        @current_class = Class.new(klass_name, [@current_path.to_s])
         @classes << @current_class
         process_until_empty exp
       end
@@ -71,7 +69,7 @@ module Analyzer
       is_singleton = exp.shift.to_s == "defn" ? false : true
       method_name = exp.shift.to_s
       lines = count_lines_in_method(method_name)
-      @current_method = Method.new(method_name, @current_class.name, lines, is_singleton)
+      @current_method = Method.new(method_name, @current_path.to_s, @current_class.name, lines, is_singleton)
       exp.shift
       process_until_empty exp
 
@@ -163,8 +161,15 @@ module Analyzer
       @classes.each do |klass|
         klass.dependencies =  klass.dependencies.map do |dep|
           dep_split = dep.split('::')
+          if class_names.include?(dep)
+            next dep
+          end
           klass_split = klass.name.split('::')
-          klass_split.pop(dep_split.size)
+          if klass_split.size != dep_split.size
+            klass_split.pop(dep_split.size)
+          else
+            klass_split.pop(dep_split.size - 1)
+          end
           (klass_split + dep_split).join('::')
         end
         klass.dependencies = klass.dependencies.uniq.keep_if {|dep| dep != klass.name && class_names.include?(dep)}
@@ -188,14 +193,15 @@ module Analyzer
       code_smells = []
       @methods.each do |method|
         if method.lines > MAX_METHOD_LENGTH
-          code_smells << CodeSmell.new(:too_big_method, method.class_name, method.name)
+          code_smells << CodeSmell.new(:too_big_method, method)
         end
         if method.complexity > MAX_COMPLEXITY
-          code_smells << CodeSmell.new(:too_complex_method, method.class_name, method.name)
+          code_smells << CodeSmell.new(:too_complex_method, method)
         end
       end
       code_smells
     end
 
   end
+end
 end

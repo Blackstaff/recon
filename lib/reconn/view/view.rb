@@ -1,6 +1,7 @@
 require_relative '../analyzer.rb'
 require_relative '../visualizer.rb'
 
+module Reconn
 class View
 
 	include GladeGUI
@@ -274,4 +275,5 @@ class View
   private :build_general_stats_view, :build_class_stats_view,
     :build_method_stats_view, :build_if_smell_view,
     :build_method_smell_view, :build_text_view
+end
 end

@@ -1,16 +1,16 @@
-module Analyzer
-  class CodeSmell
-    attr_reader :type, :class_name, :method_name
+module Reconn
+  module Analyzer
+    class CodeSmell
+      attr_reader :type, :method
 
-    def initialize(type, class_name = :none, method_name)
-      @type = type
-      @class_name = class_name
-      @method_name = method_name
-    end
+      def initialize(type, method)
+        @type = type
+        @method = method
+      end
 
-    def to_s
-      "Smell: #{@type.to_s} in Class: #{@class_name.to_s} "\
-      "Method: #{@method_name.to_s}"
+      def to_s
+        "Smell: #{@type.to_s} in #{@method.to_s} in file: #{method.filepath}"
+      end
     end
   end
 end

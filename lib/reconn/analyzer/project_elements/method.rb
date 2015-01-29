@@ -1,7 +1,8 @@
+module Reconn
 module Analyzer
   # Represents a method in the project
   class Method
-    attr_reader :name, :class_name, :lines, :complexity
+    attr_reader :name, :class_name, :lines, :complexity, :filepath
 
     include Comparable
 
@@ -9,8 +10,9 @@ module Analyzer
       name == other.name && class_name == other.class_name
     end
 
-    def initialize(name, class_name = :none, lines = 0, is_singleton = false)
+    def initialize(name, filepath = "", class_name = :none, lines = 0, is_singleton = false)
       @name = name
+      @filepath = filepath
       @class_name = class_name
       @lines = lines
       @complexity = 1
@@ -30,4 +32,5 @@ module Analyzer
     end
 
   end
+end
 end
